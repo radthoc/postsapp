@@ -41,6 +41,17 @@ class DBWrapper
         return $this->DBHandler->get_results($sql, []);
     }
 
+    public function findOneBy($table, $field, $value)
+    {
+        $query = 'SELECT * FROM ' . $table .
+            ' WHERE '. $field .
+            ' = ?';
+
+        $params[] = $value;
+
+        return $this->DBHandler->get_row($query, $params);
+    }
+
     public function findQuery($query, array $params = [])
     {
         if (empty($query))
@@ -51,22 +62,30 @@ class DBWrapper
         return $this->DBHandler->get_results($query, $params);
     }
 
-    public function persist($table, array $data)
+    public function persist($table, array $variables)
     {
-        if (empty($table) || empty($data))
+        if (empty($table) || empty($variables))
         {
             throw new \Exception(self::PROCESS . '- function persist - ' . 'One or more parameters are empty');
         }
 
-        $result = $this->DBHandler->insert($table, $data);
+        $query = "INSERT INTO " . $table;
 
-        if ($result)
+        $fields = [];
+        $values = [];
+
+        foreach ($variables as $field => $value)
         {
-            return $this->DBHandler->lastid();
+            $fields[] = $field;
+            $values[] = '?';
+            $params[] = $value;
         }
 
-        return $result;
+        $query .= ' (' . implode(', ', $fields) . ')' . ' VALUES ' . '(' . implode(', ', $values) . ');';
 
+        $this->DBHandler->insert($query, $params);
+
+        return $this->DBHandler->lastId();
     }
 
     public function update($table, array $data, array $where, $limit = null)
@@ -88,6 +107,6 @@ class DBWrapper
 
     public function lastID()
     {
-        return $this->DBHandler->lastid();
+        return $this->DBHandler->lastId();
     }
 }

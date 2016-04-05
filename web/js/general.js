@@ -32,6 +32,8 @@ var TemplatesFactory = {
 
         newContent.appendChild(newPost);
 
+        //container.insertBefore(newContent,container.childNodes[0]);
+
         container.appendChild(newContent);
     },
     renderComment: function (commentToRender) {
@@ -102,19 +104,30 @@ var ajaxFactory = {
         xhttp.send();
     },
     insertPost: function (postJson) {
+        var data = JSON.stringify(postJson);
         var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "InsertPosts.php");
-        xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-        xhttp.send(JSON.stringify(postJson));
+        xhttp.open("POST", "InsertPost.php");
+        xhttp.setRequestHeader("Content-Type", "application/json");
 
         xhttp.onreadystatechange = function () {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
-                TemplatesFactory['render'](JSON.parse(xhttp.responseText));
+                popupsFactory['popupHandler']();
+
+                var resultData = JSON.parse(xhttp.responseText);
+
+                var obj = {
+                    "post_id": resultData[0].post_id,
+                    "post_title": resultData[0].post_title,
+                    "post_description": resultData[0].post_description,
+                    "post_owner": resultData[0].post_owner,
+                    "post_date": resultData[0].post_date
+                };
+
+                TemplatesFactory['renderPost'](obj);
             }
         };
 
-        xhttp.open("POST", "InsertPost.php", true);
-        xhttp.send();
+        xhttp.send(data);
     }
 };
 
@@ -206,8 +219,8 @@ var popupsFactory = {
             var descriptionValue = validationFunctions['escapeHtml'](description.value);
 
             var post2Insert = {
-                "title": titleValue,
-                "description": descriptionValue
+                "post_title": titleValue,
+                "post_description": descriptionValue
             };
 
             ajaxFactory['insertPost'](post2Insert);

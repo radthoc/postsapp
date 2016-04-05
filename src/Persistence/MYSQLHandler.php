@@ -30,8 +30,10 @@ class MYSQLHandler implements DBHandler
             );
         } catch (PDOException $e)
         {
-            die('Unable to connect to database - ' . $e->getMessage());
+            throw new Exception('Unable to connect to database - ' . $e->getMessage());
         }
+
+        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function __destruct()
@@ -42,58 +44,69 @@ class MYSQLHandler implements DBHandler
         }
     }
 
-    public function get_results($query, $params = [], $object = false)
+    public function get_row($query, $params = [])
     {
         if (empty($query))
         {
-            throw new \Exception(self::PROCESS . '- function get_results - ' . 'Parameter query is empty');
+            throw new Exception(self::PROCESS . '- function get_results - ' . 'Parameter query is empty');
         }
 
         $statement = $this->conn->prepare($query);
-        $statement->execute($params);
 
-        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        if ($statement->execute($params))
+        {
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            $statement = null;
 
-        $statement = null;
-
-        return $result;
+            return $result;
+        }
+        else
+        {
+            throw new Exception('Error - ' . $statement->errorCode());
+        }
     }
 
-    public function insert($table, $variables)
+    public function get_results($query, $params = [])
     {
-        if (empty($table) || empty($variables))
+        if (empty($query))
+        {
+            throw new Exception(self::PROCESS . '- function get_results - ' . 'Parameter query is empty');
+        }
+
+        $statement = $this->conn->prepare($query);
+
+        if ($statement->execute($params))
+        {
+            $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+            $statement = null;
+            return $result;
+        }
+        else
+        {
+            throw new Exception('Error - ' . $statement->errorCode());
+        }
+    }
+
+    public function insert($query, $params)
+    {
+        if (empty($query) || empty($params))
         {
             throw new \Exception(self::PROCESS . '- function insert - ' . 'One ore more parameters are empty');
         }
 
-        $variables = $this->sanitize($variables);
+        $statement = $this->conn->prepare($query);
 
-        $sql = "INSERT INTO " . $table;
-
-        $fields = [];
-        $values = [];
-
-        foreach ($variables as $field => $value)
+        if ($statement->execute($params))
         {
-            $fields[] = $field;
-            $values[] = "'" . $value . "'";
-        }
-
-        $fields = ' (' . implode(', ', $fields) . ')';
-        $values = '(' . implode(', ', $values) . ')';
-
-        $sql .= $fields . ' VALUES ' . $values;
-
-        $query = $this->conn->query($sql);
-
-        if ($this->conn->error)
-        {
-            throw new \Exception(self::PROCESS . '- function insert - ' . $this->conn->error);
+            $statement = null;
+            return true;
         }
         else
         {
-            return true;
+            throw new Exception('Error - ' . $statement->errorCode());
         }
+
     }
 
     public function update($table, $variables, $where, $limit = '')
@@ -105,14 +118,14 @@ class MYSQLHandler implements DBHandler
 
         $variables = $this->sanitize($variables);
 
-        $sql = "UPDATE " . $table . " SET ";
+        $query = "UPDATE " . $table . " SET ";
 
         foreach ($variables as $field => $value)
         {
             $updates[] = "`$field` = '$value'";
         }
 
-        $sql .= implode(', ', $updates);
+        $query .= implode(', ', $updates);
 
         if (!empty($where))
         {
@@ -121,15 +134,15 @@ class MYSQLHandler implements DBHandler
                 $value = $value;
                 $clause[] = "$field = '$value'";
             }
-            $sql .= ' WHERE ' . implode(' AND ', $clause);
+            $query .= ' WHERE ' . implode(' AND ', $clause);
         }
 
         if (!empty($limit))
         {
-            $sql .= ' LIMIT ' . $limit;
+            $query .= ' LIMIT ' . $limit;
         }
 
-        $query = $this->conn->query($sql);
+        $query = $this->conn->query($query);
 
         if ($this->conn->error)
         {
@@ -137,56 +150,16 @@ class MYSQLHandler implements DBHandler
         }
 
         return true;
-
     }
 
-    public function lastid()
+    public function lastId()
     {
-        return $this->conn->insert_id;
+        return $this->conn->lastInsertId();;
     }
 
     public function affected()
     {
         return $this->conn->affected_rows;
-    }
-
-    private function setStatement($query, $params)
-    {
-        try
-        {
-            $stmt = $this->conn->prepare($query);
-            $ref = new \ReflectionClass('mysqli_stmt');
-
-            if (count($params) != 0)
-            {
-                $method = $ref->getMethod('bind_param');
-                $method->invokeArgs($stmt, $params);
-            }
-        } catch (Exception $e)
-        {
-            if ($stmt != null)
-            {
-                $stmt->close();
-            }
-        }
-
-        return $stmt;
-    }
-
-    private function sanitize($data)
-    {
-        if (!is_array($data))
-        {
-            //$data = str_replace(["\n", "\r"], "", $data);
-            $data = str_replace(PHP_EOL, "", $data);
-            $data = $this->conn->real_escape_string($data);
-        }
-        else
-        {
-            $data = array_map([$this, 'sanitize'], $data);
-        }
-
-        return $data;
     }
 
     private function escape($data)

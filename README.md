@@ -19,3 +19,7 @@ Tests
 -----
 Still in the oven!
 
+Notes
+-----
+In order to prevent spams we added a redundant field in the forms hidden through css.
+Normal users will not be able to see the field, but spambots will try to enter a value into it because they do not process CSS or javascript.
