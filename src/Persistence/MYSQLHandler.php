@@ -1,5 +1,5 @@
 <?php
-include_once 'DBHandler.php';
+include_once 'DBHandlerInterface.php';
 
 class MYSQLHandler implements DBHandlerInterface
 {
