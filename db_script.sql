@@ -32,3 +32,10 @@ CREATE TABLE `comments` (
   CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `comments_posts_ibfk_1` FOREIGN KEY (`post_id`) REFERENCES `posts` (`post_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+INSERT INTO `users` VALUES (0,'admin@posts_app','admin'),
+(0,'rudinikel@fontana.com','Rudy Nin'),
+(0,'pinse@asquasiati.it','Pindaro Sepulveda'),
+(0,'Pindaro Sepulveda Lendebolt','pinsebol@yahoo.com'),
+(0,'Yulelpi Escribano','yulelpi@hotmail.com'),
+(0,'Arilskelmi Iturbides','arisbides@hotmail.com');
