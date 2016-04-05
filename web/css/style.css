@@ -1,0 +1,141 @@
+body{
+    font-family: Verdana, Arial, Sans-serif;
+}
+
+.container{
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+header {
+    width: 94%;
+    padding: 3%;
+    background: linear-gradient(#9C9998, darkslategray);
+}
+
+header #title {
+    font-size: 50px;
+    color: #fff;
+}
+
+nav {
+    width: 97%;
+    background-color: darkslategray;
+    padding: 0 3% 0 0;
+}
+nav ul li {
+    display: inline-block;
+    padding: 5px 1.5% 5px 0;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1.2em;
+}
+nav ul li a:hover {
+    color: #000000;
+    text-decoration: none;
+}
+
+.content {
+    width: 93%;
+    padding: 1% 3%;
+    min-height: 80px;
+    background-color: whitesmoke;
+    display: block;
+    margin: 0 auto 10px auto;
+    box-shadow: 3px 3px 10px #888888;
+}
+
+.content .title{
+    color: #7A7979;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.description{
+    color: #7A7979;
+}
+
+.owner{
+    color: #9C9998;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.date{
+    color: #B09453;
+    font-size: 12px;
+    padding-left: 10px;
+}
+
+.comment{
+    border-top: 1px solid #B09453;
+    margin: 10px 5px;
+    padding-top: 5px;
+}
+
+footer{
+    padding: 3%;
+    background: darkslategray;
+    color: #fff;
+    text-align: center;
+    clear: both;
+}
+
+.black_overlay{
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=80);
+}
+
+#popup{
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    border: 1px solid dimgrey;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+    padding: 10px;
+}
+
+#popup #close {
+    position: absolute;
+    top: 2px;
+    right: 10px;
+    transition: all 200ms;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: dimgrey;
+}
+
+#popup #captcha{
+    display:none;
+    visibility:hidden;
+}
+
+input[type="text"], textarea {
+    display: block;
+    margin: 0;
+    width: 97%;
+    appearance: none;
+    box-shadow: none;
+    border: 1px solid dimgrey;
+    margin-bottom: 15px;
+}
+
+input[type="text"]:focus, textarea:focus {
+    outline: none;
+    box-shadow: 0 0 5px 1px #969696;
+}

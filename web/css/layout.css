@@ -1,0 +1,35 @@
+body {
+    padding-top: 40px;
+}
+
+#nav ul li {
+    float: left;
+    margin-left: 30px;
+    line-height: 40px;
+}
+
+#bigphoto img, .smallphoto img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* iPad Portrait/Browser */
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    #nav ul li {
+        margin-left: 15px;
+    }
+
+}
+
+/* Mobile/Browser */
+@media only screen and (max-width: 767px) {
+    h2 {
+        font-size: 2em;
+        margin-bottom: 0;
+    }
+
+    #nav ul li {
+        margin-right: 15px;
+        margin-left: 0;
+    }
+}
