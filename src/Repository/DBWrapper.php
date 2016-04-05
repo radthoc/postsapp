@@ -27,8 +27,7 @@ class DBWrapper
 
     public function findAll($table, $orderBy = "''")
     {
-        if (empty($table))
-        {
+        if (empty($table)) {
             throw new \Exception(self::PROCESS . '- function findAll - ' . 'Parameter table is empty');
         }
 
@@ -54,8 +53,7 @@ class DBWrapper
 
     public function findQuery($query, array $params = [])
     {
-        if (empty($query))
-        {
+        if (empty($query)) {
             throw new \Exception(self::PROCESS . '- function findQuery - ' . 'Parameter query is empty');
         }
 
@@ -64,8 +62,7 @@ class DBWrapper
 
     public function persist($table, array $variables)
     {
-        if (empty($table) || empty($variables))
-        {
+        if (empty($table) || empty($variables)) {
             throw new \Exception(self::PROCESS . '- function persist - ' . 'One or more parameters are empty');
         }
 
@@ -74,8 +71,7 @@ class DBWrapper
         $fields = [];
         $values = [];
 
-        foreach ($variables as $field => $value)
-        {
+        foreach ($variables as $field => $value) {
             $fields[] = $field;
             $values[] = '?';
             $params[] = $value;
@@ -92,13 +88,11 @@ class DBWrapper
     {
         $result = false;
 
-        if (empty($table) || empty($data) || empty($where))
-        {
+        if (empty($table) || empty($data) || empty($where)) {
             throw new \Exception(self::PROCESS . '- function update - ' . 'One or more parameters are empty');
         }
 
-        if ($this->DBHandler->update($table, $data, $where, $limit))
-        {
+        if ($this->DBHandler->update($table, $data, $where, $limit)) {
             $result = $this->DBHandler->affected() > 0;
         }
 

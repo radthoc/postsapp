@@ -1,7 +1,7 @@
 <?php
 include_once 'DBHandler.php';
 
-class MYSQLHandler implements DBHandler
+class MYSQLHandler implements DBHandlerInterface
 {
     const PROCESS = 'MYSQLiHandler';
 
@@ -18,8 +18,7 @@ class MYSQLHandler implements DBHandler
         mb_internal_encoding('UTF-8');
         mb_regex_encoding('UTF-8');
 
-        try
-        {
+        try {
             $this->conn = new PDO(
                 'mysql: host=' . $this->params['host'] .
                 ';dbname=' . $this->params['schema'] .
@@ -28,8 +27,7 @@ class MYSQLHandler implements DBHandler
                 $this->params['usr'],
                 $this->params['pwd']
             );
-        } catch (PDOException $e)
-        {
+        } catch (PDOException $e) {
             throw new Exception('Unable to connect to database - ' . $e->getMessage());
         }
 
@@ -38,72 +36,59 @@ class MYSQLHandler implements DBHandler
 
     public function __destruct()
     {
-        if ($this->conn)
-        {
+        if ($this->conn) {
             $this->disconnect();
         }
     }
 
     public function get_row($query, $params = [])
     {
-        if (empty($query))
-        {
+        if (empty($query)) {
             throw new Exception(self::PROCESS . '- function get_results - ' . 'Parameter query is empty');
         }
 
         $statement = $this->conn->prepare($query);
 
-        if ($statement->execute($params))
-        {
+        if ($statement->execute($params)) {
             $result = $statement->fetch(PDO::FETCH_ASSOC);
             $statement = null;
 
             return $result;
-        }
-        else
-        {
+        } else {
             throw new Exception('Error - ' . $statement->errorCode());
         }
     }
 
     public function get_results($query, $params = [])
     {
-        if (empty($query))
-        {
+        if (empty($query)) {
             throw new Exception(self::PROCESS . '- function get_results - ' . 'Parameter query is empty');
         }
 
         $statement = $this->conn->prepare($query);
 
-        if ($statement->execute($params))
-        {
+        if ($statement->execute($params)) {
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             $statement = null;
             return $result;
-        }
-        else
-        {
+        } else {
             throw new Exception('Error - ' . $statement->errorCode());
         }
     }
 
     public function insert($query, $params)
     {
-        if (empty($query) || empty($params))
-        {
+        if (empty($query) || empty($params)) {
             throw new \Exception(self::PROCESS . '- function insert - ' . 'One ore more parameters are empty');
         }
 
         $statement = $this->conn->prepare($query);
 
-        if ($statement->execute($params))
-        {
+        if ($statement->execute($params)) {
             $statement = null;
             return true;
-        }
-        else
-        {
+        } else {
             throw new Exception('Error - ' . $statement->errorCode());
         }
 
@@ -111,8 +96,7 @@ class MYSQLHandler implements DBHandler
 
     public function update($table, $variables, $where, $limit = '')
     {
-        if (empty($table) || empty($variables) || empty($where))
-        {
+        if (empty($table) || empty($variables) || empty($where)) {
             throw new \Exception(self::PROCESS . '- function update - ' . 'One or more parameters are empty');
         }
 
@@ -120,32 +104,27 @@ class MYSQLHandler implements DBHandler
 
         $query = "UPDATE " . $table . " SET ";
 
-        foreach ($variables as $field => $value)
-        {
+        foreach ($variables as $field => $value) {
             $updates[] = "`$field` = '$value'";
         }
 
         $query .= implode(', ', $updates);
 
-        if (!empty($where))
-        {
-            foreach ($where as $field => $value)
-            {
+        if (!empty($where)) {
+            foreach ($where as $field => $value) {
                 $value = $value;
                 $clause[] = "$field = '$value'";
             }
             $query .= ' WHERE ' . implode(' AND ', $clause);
         }
 
-        if (!empty($limit))
-        {
+        if (!empty($limit)) {
             $query .= ' LIMIT ' . $limit;
         }
 
         $query = $this->conn->query($query);
 
-        if ($this->conn->error)
-        {
+        if ($this->conn->error) {
             throw new \Exception(self::PROCESS . '- function update - ' . $this->conn->error);
         }
 
@@ -154,7 +133,8 @@ class MYSQLHandler implements DBHandler
 
     public function lastId()
     {
-        return $this->conn->lastInsertId();;
+        return $this->conn->lastInsertId();
+        ;
     }
 
     public function affected()
@@ -164,12 +144,9 @@ class MYSQLHandler implements DBHandler
 
     private function escape($data)
     {
-        if (!is_array($data))
-        {
+        if (!is_array($data)) {
             $data = addslashes($data);
-        }
-        else
-        {
+        } else {
             $data = array_map([$this, 'escape'], $data);
         }
 

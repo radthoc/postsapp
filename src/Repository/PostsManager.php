@@ -60,5 +60,4 @@ ORDER BY post_date, comment_date DESC;';
     {
         return $this->dbWrapper->lastID();
     }
-
 }

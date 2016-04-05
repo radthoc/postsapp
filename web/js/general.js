@@ -63,17 +63,20 @@ var TemplatesFactory = {
     render: function (posts) {
         var post_id = 0;
 
-        for (let post of posts)
-        {
-            if (post_id != post.post_id) {
-                post_id = post.post_id;
+        if (posts) {
+            for (let post of posts)
+            {
+                if (post_id != post.post_id) {
+                    TemplatesFactory['renderPost'](post);
+                }
 
-                TemplatesFactory['renderPost'](post);
+                if (post.comment_id) {
+                    TemplatesFactory['renderComment'](post);
+                }
             }
-
-            if (post.comment_id) {
-                TemplatesFactory['renderComment'](post);
-            }
+        }
+        else{
+            TemplatesFactory['renderPost'](welcomePost);
         }
     }
 };
@@ -175,7 +178,7 @@ var popupsFactory = {
         postDescriptionField.setAttribute('id', "description");
         postDescriptionField.setAttribute("placeholder", "description");
         postDescriptionField.setAttribute('rows', "5");
-        postDescriptionField.setAttribute('cols', "100");
+        postDescriptionField.setAttribute('cols', "97");
 
         popup.appendChild(postDescriptionField);
 
@@ -230,44 +233,18 @@ var popupsFactory = {
     },
 }
 
-var staticPost = [
+var welcomePost = [
     {
-        "post_id": 13,
-        "post_title": "Este es el primer post dinamico",
-        "post_description": "Y asi de esta manera hemos creado un post de manera dinamica. Gracias por la ayuda y colaboracion de todos los implicados en esta ardua labor. Ha sido un gran trabajo de equipo!",
-        "post_owner": "yulelpi@baiguate.com",
-        "post_date": "15/03/2016 10:23:08",
-        "comment_id": 12,
-        "comment_description": "ahi es que la puerca tuerce el rabo!",
-        "comment_user": "arisquelmi@hotmail.com",
-        "comment_date": "16/03/2016 14:08:56"
-    },
-    {
-        "post_id": 13,
-        "post_title": "Este es el primer post dinamico",
-        "post_description": "Y asi de esta manera hemos creado un post de manera dinamica. Gracias por la ayuda y colaboracion de todos los implicados en esta ardua labor. Ha sido un gran trabajo de equipo!",
-        "post_owner": "yulelpi@baiguate.com",
-        "post_date": "15/03/2016 10:23:08",
-        "comment_id": 14,
-        "comment_description": "na eh na, lo que importa es lo que vale!",
-        "comment_user": "ancuz@gmail.com",
-        "comment_date": "16/03/2016 15:26:33"
-    },
-    {
-        "post_id": 13,
-        "post_title": "Este es el primer post dinamico",
-        "post_description": "Y asi de esta manera hemos creado un post de manera dinamica. Gracias por la ayuda y colaboracion de todos los implicados en esta ardua labor. Ha sido un gran trabajo de equipo!",
-        "post_owner": "yulelpi@baiguate.com",
-        "post_date": "15/03/2016 10:23:08",
-        "comment_id": 14,
-        "comment_description": "ya si fue verda q llegamo como le dijo el tuerto al ciego!",
-        "comment_user": "pindaro@hotmail.com",
-        "comment_date": "18/03/2016 09:36:22"
+        "post_id": 0,
+        "post_title": "Welcome to your post app",
+        "post_description": "Thanks for joining us!",
+        "post_owner": "admin@post_app",
+        "post_date": "02/04/2016 10:23:08"
     }
 ];
 
 window.onload = function () {
-    //TemplatesFactory['render'](staticPost);
+    //TemplatesFactory['render'](welcomePost);
 
     var newPostBt = document.getElementById('new_post');
 

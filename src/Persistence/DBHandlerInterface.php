@@ -1,6 +1,6 @@
 <?php
 
-interface DBHandler
+interface DBHandlerInterface
 {
     public function get_row($query, $params = []);
 
