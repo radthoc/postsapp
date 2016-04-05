@@ -50,10 +50,33 @@ ORDER BY post_date, comment_date DESC;';
         return $this->dbWrapper->findQuery($query);
     }
 
-    public function persist($data)
+    public function addPost($data)
     {
         $data['user_id'] = 3;
         return $this->dbWrapper->persist("posts", $data);
+    }
+
+    public function getCommentById($commentId)
+    {
+        $query = '
+SELECT c.comment_id,
+c.post_id,
+c.comment_description,
+u.user_email AS comment_user,
+c.comment_date
+FROM comments c
+JOIN users u ON c.user_id = u.user_id
+WHERE c.comment_id = ?;';
+
+        $params[] = $commentId;
+
+        return $this->dbWrapper->findQuery($query, $params);
+    }
+
+    public function addComment($data)
+    {
+        $data['user_id'] = 5;
+        return $this->dbWrapper->persist("comments", $data);
     }
 
     public function getLastInsertedId()

@@ -13,6 +13,16 @@ var TemplatesFactory = {
         newPostTitle.setAttribute('class', 'title');
         newPostTitle.innerHTML = postToRender.post_title;
 
+        var newAddBt = document.createElement('a');
+        newAddBt.setAttribute('href', 'javascript:void(0)');
+        newAddBt.setAttribute('class', 'add-bt');
+        newAddBt.setAttribute('title', 'add a comment');
+        newAddBt.setAttribute('data-post', postToRender.post_id);
+        newAddBt.setAttribute('onclick', 'popupsFactory["newComment"](this)');
+        newAddBt.innerHTML = '+';
+
+        newPostTitle.appendChild(newAddBt);
+
         var newPostDescription = document.createElement('p');
         newPostDescription.setAttribute('class', 'description');
         newPostDescription.innerHTML = postToRender.post_description;
@@ -61,7 +71,7 @@ var TemplatesFactory = {
         postContainer.appendChild(newComment);
     },
     render: function (posts) {
-        var post_id = 0;
+        var post_id = null;
 
         if (posts) {
             for (let post of posts)
@@ -127,6 +137,32 @@ var ajaxFactory = {
                 };
 
                 TemplatesFactory['renderPost'](obj);
+            }
+        };
+
+        xhttp.send(data);
+    },
+    insertComment: function (commentJson) {
+        var data = JSON.stringify(commentJson);
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "InsertComment.php");
+        xhttp.setRequestHeader("Content-Type", "application/json");
+
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState == 4 && xhttp.status == 200) {
+                popupsFactory['popupHandler']();
+
+                var resultData = JSON.parse(xhttp.responseText);
+
+                var obj = {
+                    "post_id": resultData[0].post_id,
+                    "comment_description": resultData[0].comment_description,
+                    "comment_user": resultData[0].comment_user,
+                    "comment_date": resultData[0].comment_date
+                };
+
+                TemplatesFactory['renderComment'](obj);
             }
         };
 
@@ -231,6 +267,74 @@ var popupsFactory = {
             return false;
         }
     },
+    newComment: function (addBt) {
+        var postId = addBt.getAttribute("data-post");
+
+        popupsFactory['popupHandler']();
+
+        var popup = document.getElementById('popup_content');
+
+        popup.innerHTML = '';
+
+        var commentHeader = document.createElement("h2");
+        commentHeader.innerHTML = 'Add a comment';
+
+        popup.appendChild(commentHeader);
+
+        var commentDescriptionField = document.createElement("textarea");
+        commentDescriptionField.setAttribute('id', "description");
+        commentDescriptionField.setAttribute("placeholder", "comment");
+        commentDescriptionField.setAttribute('rows', "5");
+        commentDescriptionField.setAttribute('cols', "97");
+
+        popup.appendChild(commentDescriptionField);
+
+        var commentCaptchaField = document.createElement("input");
+        commentCaptchaField.setAttribute("type", "text");
+        commentCaptchaField.setAttribute('id', "captcha");
+        commentCaptchaField.setAttribute("size", "10");
+        commentCaptchaField.setAttribute("max", "10");
+        commentCaptchaField.setAttribute("placeholder", "captcha");
+
+        popup.appendChild(commentCaptchaField);
+
+        var commentSubmitBt = document.createElement("input");
+        commentSubmitBt.setAttribute('id', "submit");
+        commentSubmitBt.setAttribute("type", "submit");
+        commentSubmitBt.setAttribute('data-post', postId);
+
+        popup.appendChild(commentSubmitBt);
+
+        var commentSubmitBtHandler = document.getElementById('submit');
+        commentSubmitBtHandler.onclick = function() {
+            var formCaptcha = document.getElementById('captcha');
+
+            if (formCaptcha.value)
+            {
+                alert("Invalid Form!");
+                return false;
+            }
+
+            var description = document.getElementById('description');
+            if (description.value == null || description.value == "") {
+                description.focus();
+                return false;
+            }
+
+            var descriptionValue = validationFunctions['escapeHtml'](description.value);
+
+            //var postId = this.getAttribute("data-post");
+
+            var comment2Insert = {
+                "post_id": postId,
+                "comment_description": descriptionValue
+            };
+
+            ajaxFactory['insertComment'](comment2Insert);
+
+            return false;
+        }
+    },
 }
 
 var welcomePost = [
@@ -248,14 +352,20 @@ window.onload = function () {
 
     var newPostBt = document.getElementById('new_post');
 
-    newPostBt.onclick=function(){
+    newPostBt.onclick = function(){
         popupsFactory['newPost']();
     };
 
     var closeBt = document.getElementById('close');
 
-    closeBt.onclick=function(){
+    closeBt.onclick = function(){
         popupsFactory['popupHandler']();
+    };
+
+    var addBt = document.getElementsByClassName("add-bt");
+    addBt.onclick = function(){
+        var postId = this.getAttribute("data-post");
+        popupsFactory['newComment'](postId);
     };
 
     ajaxFactory['getPosts']();

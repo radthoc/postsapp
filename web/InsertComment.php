@@ -10,15 +10,15 @@ include_once __DIR__ .
     DIRECTORY_SEPARATOR .
     'PostsManager.php';
 
-$post2Insert = json_decode(file_get_contents("php://input"), true);
+$comment2Insert = json_decode(file_get_contents("php://input"), true);
 
 $postsManager = new PostsManager;
 
 try {
-    $postId = $postsManager->addPost($post2Insert);
+    $commentId = $postsManager->addComment($comment2Insert);
     //$postsManager->getLastInsertedId();
 
-    $result = $postsManager->getPostById($postId);
+    $result = $postsManager->getCommentById($commentId);
 
     $status = true;
 

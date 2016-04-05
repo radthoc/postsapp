@@ -125,6 +125,15 @@ footer{
     visibility:hidden;
 }
 
+.add-bt {
+    transition: all 200ms;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #B09453;
+    margin-left: 10px;
+}
+
 input[type="text"], textarea {
     display: block;
     margin: 0;
