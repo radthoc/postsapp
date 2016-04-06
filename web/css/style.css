@@ -84,7 +84,7 @@ footer{
 }
 
 .black_overlay{
-    position: absolute;
+    position: fixed;
     top: 0%;
     left: 0%;
     width: 100%;
@@ -97,7 +97,7 @@ footer{
 }
 
 #popup{
-    position: absolute;
+    position: fixed;
     top: 25%;
     left: 25%;
     width: 50%;
