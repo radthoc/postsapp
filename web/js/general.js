@@ -77,6 +77,7 @@ var TemplatesFactory = {
             for (let post of posts)
             {
                 if (post_id != post.post_id) {
+                    post_id = post.post_id;
                     TemplatesFactory['renderPost'](post);
                 }
 
