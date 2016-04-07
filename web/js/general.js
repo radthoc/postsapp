@@ -1,4 +1,4 @@
-var TemplatesFactory = {
+var templatesFactory = {
     renderPost: function (postToRender) {
         var container = document.getElementById("container");
 
@@ -25,7 +25,7 @@ var TemplatesFactory = {
 
         var newPostDescription = document.createElement('p');
         newPostDescription.setAttribute('class', 'description');
-        newPostDescription.innerHTML = postToRender.post_description;
+        newPostDescription.innerHTML = validationFunctions['urlifyText'](postToRender.post_description);
 
         var newPostOwner = document.createElement('span');
         newPostOwner.setAttribute('class', 'owner');
@@ -78,16 +78,16 @@ var TemplatesFactory = {
             {
                 if (post_id != post.post_id) {
                     post_id = post.post_id;
-                    TemplatesFactory['renderPost'](post);
+                    templatesFactory['renderPost'](post);
                 }
 
                 if (post.comment_id) {
-                    TemplatesFactory['renderComment'](post);
+                    templatesFactory['renderComment'](post);
                 }
             }
         }
         else{
-            TemplatesFactory['renderPost'](welcomePost);
+            templatesFactory['renderPost'](welcomePost);
         }
     }
 };
@@ -100,6 +100,12 @@ var validationFunctions = {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
+    },
+    urlifyText: function (text) {
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, function(url) {
+            return '<a href="' + url + '">' + url + '</a>';
+        })
     }
 };
 
@@ -110,7 +116,7 @@ var ajaxFactory = {
         xhttp.onreadystatechange = function () {
             if (xhttp.readyState == 4 && xhttp.status == 200) {
 
-                TemplatesFactory['render'](JSON.parse(xhttp.responseText));
+                templatesFactory['render'](JSON.parse(xhttp.responseText));
             }
         };
 
@@ -137,7 +143,7 @@ var ajaxFactory = {
                     "post_date": resultData[0].post_date
                 };
 
-                TemplatesFactory['renderPost'](obj);
+                templatesFactory['renderPost'](obj);
             }
         };
 
@@ -163,7 +169,7 @@ var ajaxFactory = {
                     "comment_date": resultData[0].comment_date
                 };
 
-                TemplatesFactory['renderComment'](obj);
+                templatesFactory['renderComment'](obj);
             }
         };
 
@@ -349,7 +355,7 @@ var welcomePost = [
 ];
 
 window.onload = function () {
-    //TemplatesFactory['render'](welcomePost);
+    //templatesFactory['render'](welcomePost);
 
     var newPostBt = document.getElementById('new_post');
 
