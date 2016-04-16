@@ -10,7 +10,7 @@ include_once __DIR__ .
 class DBWrapper
 {
     const PROCESS = 'DBWrapper';
-    private $DBHandler;
+    private $dBHandler;
     private $operators = [
         '=',
         '!=',
@@ -22,7 +22,7 @@ class DBWrapper
 
     public function __construct()
     {
-        $this->DBHandler = new MYSQLHandler;
+        $this->dBHandler = new MYSQLHandler;
     }
 
     public function findAll($table, $orderBy = "''")
@@ -37,7 +37,7 @@ class DBWrapper
             $orderBy
         );
 
-        return $this->DBHandler->get_results($sql, []);
+        return $this->dBHandler->get_results($sql, []);
     }
 
     public function findOneBy($table, $field, $value)
@@ -48,7 +48,7 @@ class DBWrapper
 
         $params[] = $value;
 
-        return $this->DBHandler->get_row($query, $params);
+        return $this->dBHandler->get_row($query, $params);
     }
 
     public function findQuery($query, array $params = [])
@@ -57,7 +57,7 @@ class DBWrapper
             throw new \Exception(self::PROCESS . '- function findQuery - ' . 'Parameter query is empty');
         }
 
-        return $this->DBHandler->get_results($query, $params);
+        return $this->dBHandler->get_results($query, $params);
     }
 
     public function persist($table, array $variables)
@@ -79,9 +79,9 @@ class DBWrapper
 
         $query .= ' (' . implode(', ', $fields) . ')' . ' VALUES ' . '(' . implode(', ', $values) . ');';
 
-        $this->DBHandler->insert($query, $params);
+        $this->dBHandler->insert($query, $params);
 
-        return $this->DBHandler->lastId();
+        return $this->dBHandler->lastId();
     }
 
     public function update($table, array $data, array $where, $limit = null)
@@ -92,8 +92,8 @@ class DBWrapper
             throw new \Exception(self::PROCESS . '- function update - ' . 'One or more parameters are empty');
         }
 
-        if ($this->DBHandler->update($table, $data, $where, $limit)) {
-            $result = $this->DBHandler->affected() > 0;
+        if ($this->dBHandler->update($table, $data, $where, $limit)) {
+            $result = $this->dBHandler->affected() > 0;
         }
 
         return $result;
@@ -101,6 +101,6 @@ class DBWrapper
 
     public function lastID()
     {
-        return $this->DBHandler->lastId();
+        return $this->dBHandler->lastId();
     }
 }
