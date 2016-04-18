@@ -44,8 +44,7 @@ c.comment_date
 FROM posts p
 JOIN users up ON p.user_id = up.user_id
 LEFT JOIN comments c ON p.post_id = c.post_id
-LEFT JOIN users uc ON c.user_id = uc.user_id
-ORDER BY post_date, comment_date DESC;';
+LEFT JOIN users uc ON c.user_id = uc.user_id;';
 
         return $this->dbWrapper->findQuery($query);
     }

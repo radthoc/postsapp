@@ -42,9 +42,7 @@ var templatesFactory = {
 
         newContent.appendChild(newPost);
 
-        //container.insertBefore(newContent,container.childNodes[0]);
-
-        container.appendChild(newContent);
+        container.insertBefore(newContent, container.firstChild);
     },
     renderComment: function (commentToRender) {
         var postContainer = document.getElementById(commentToRender.post_id);
@@ -68,7 +66,8 @@ var templatesFactory = {
         newComment.appendChild(newCommentDate);
         newComment.appendChild(newCommentDescription);
 
-        postContainer.appendChild(newComment);
+        //postContainer.appendChild(newComment);
+        postContainer.insertBefore(newComment, postContainer.children[1]);
     },
     render: function (posts) {
         var post_id = null;
