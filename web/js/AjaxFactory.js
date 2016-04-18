@@ -24,15 +24,7 @@ var ajaxFactory = {
 
                 var resultData = JSON.parse(xhttp.responseText);
 
-                var obj = {
-                    "post_id": resultData[0].post_id,
-                    "post_title": resultData[0].post_title,
-                    "post_description": resultData[0].post_description,
-                    "post_owner": resultData[0].post_owner,
-                    "post_date": resultData[0].post_date
-                };
-
-                templatesFactory['renderPost'](obj);
+                templatesFactory['render'](resultData);
             }
         };
 
