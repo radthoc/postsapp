@@ -37,7 +37,7 @@ class DBWrapper
             $orderBy
         );
 
-        return $this->dBHandler->get_results($sql, []);
+        return $this->dBHandler->getResults($sql, []);
     }
 
     public function findOneBy($table, $field, $value)
@@ -48,7 +48,7 @@ class DBWrapper
 
         $params[] = $value;
 
-        return $this->dBHandler->get_row($query, $params);
+        return $this->dBHandler->getRow($query, $params);
     }
 
     public function findQuery($query, array $params = [])
@@ -57,7 +57,7 @@ class DBWrapper
             throw new \Exception(self::PROCESS . '- function findQuery - ' . 'Parameter query is empty');
         }
 
-        return $this->dBHandler->get_results($query, $params);
+        return $this->dBHandler->getResults($query, $params);
     }
 
     public function persist($table, array $variables)

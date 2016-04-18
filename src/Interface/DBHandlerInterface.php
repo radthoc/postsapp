@@ -2,9 +2,9 @@
 
 interface DBHandlerInterface
 {
-    public function get_row($query, $params = []);
+    public function getRow($query, $params = []);
 
-    public function get_results($query, $params = []);
+    public function getResults($query, $params = []);
 
     public function insert($table, $variables);
 

@@ -1,5 +1,11 @@
 <?php
-include_once 'DBHandlerInterface.php';
+include_once __DIR__ .
+    DIRECTORY_SEPARATOR .
+    '..' .
+    DIRECTORY_SEPARATOR .
+    'Interface' .
+    DIRECTORY_SEPARATOR .
+    'DBHandlerInterface.php';
 
 class MYSQLHandler implements DBHandlerInterface
 {
@@ -41,7 +47,7 @@ class MYSQLHandler implements DBHandlerInterface
         }
     }
 
-    public function get_row($query, $params = [])
+    public function getRow($query, $params = [])
     {
         if (empty($query)) {
             throw new Exception(self::PROCESS . '- function get_results - ' . 'Parameter query is empty');
@@ -59,7 +65,7 @@ class MYSQLHandler implements DBHandlerInterface
         }
     }
 
-    public function get_results($query, $params = [])
+    public function getResults($query, $params = [])
     {
         if (empty($query)) {
             throw new Exception(self::PROCESS . '- function get_results - ' . 'Parameter query is empty');
