@@ -7,11 +7,18 @@ include_once __DIR__ .
     DIRECTORY_SEPARATOR .
     'DBHandlerInterface.php';
 
+/**
+ * Class MYSQLHandler
+ */
 class MYSQLHandler implements DBHandlerInterface
 {
     const PROCESS = 'MYSQLiHandler';
 
     private $conn = null;
+
+    /**
+     * @var array
+     */
     private $params = [
         'host' => '127.0.0.1',
         'usr' => 'root',
@@ -47,6 +54,12 @@ class MYSQLHandler implements DBHandlerInterface
         }
     }
 
+    /**
+     * @param $query
+     * @param array $params
+     * @return mixed
+     * @throws Exception
+     */
     public function getRow($query, $params = [])
     {
         if (empty($query)) {
@@ -65,6 +78,12 @@ class MYSQLHandler implements DBHandlerInterface
         }
     }
 
+    /**
+     * @param $query
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
     public function getResults($query, $params = [])
     {
         if (empty($query)) {
@@ -83,6 +102,12 @@ class MYSQLHandler implements DBHandlerInterface
         }
     }
 
+    /**
+     * @param $query
+     * @param $params
+     * @return bool
+     * @throws Exception
+     */
     public function insert($query, $params)
     {
         if (empty($query) || empty($params)) {
@@ -100,6 +125,14 @@ class MYSQLHandler implements DBHandlerInterface
 
     }
 
+    /**
+     * @param $table
+     * @param $variables
+     * @param $where
+     * @param string $limit
+     * @return bool
+     * @throws Exception
+     */
     public function update($table, $variables, $where, $limit = '')
     {
         if (empty($table) || empty($variables) || empty($where)) {
@@ -137,17 +170,26 @@ class MYSQLHandler implements DBHandlerInterface
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     public function lastId()
     {
         return $this->conn->lastInsertId();
-        ;
     }
 
+    /**
+     * @return mixed
+     */
     public function affected()
     {
         return $this->conn->affected_rows;
     }
 
+    /**
+     * @param $data
+     * @return array|string
+     */
     private function escape($data)
     {
         if (!is_array($data)) {
@@ -159,6 +201,10 @@ class MYSQLHandler implements DBHandlerInterface
         return $data;
     }
 
+    /**
+     * @param $data
+     * @return string
+     */
     private function cleanToSend($data)
     {
         $data = stripslashes($data);

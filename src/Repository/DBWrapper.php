@@ -1,16 +1,20 @@
 <?php
-include_once __DIR__ .
-    DIRECTORY_SEPARATOR .
-    '..' .
-    DIRECTORY_SEPARATOR .
-    'Persistence' .
-    DIRECTORY_SEPARATOR .
-    'MYSQLHandler.php';
 
+/**
+ * Class DBWrapper
+ */
 class DBWrapper
 {
     const PROCESS = 'DBWrapper';
+
+    /**
+     * @var  DBHandlerInterface
+     */
     private $dBHandler;
+
+    /**
+     * @var array
+     */
     private $operators = [
         '=',
         '!=',
@@ -20,11 +24,17 @@ class DBWrapper
         '>='
     ];
 
-    public function __construct()
+    public function __construct(DBHandlerInterface $dBHandler)
     {
-        $this->dBHandler = new MYSQLHandler;
+        $this->dBHandler = $dBHandler;
     }
 
+    /**
+     * @param $table
+     * @param string $orderBy
+     * @return mixed
+     * @throws Exception
+     */
     public function findAll($table, $orderBy = "''")
     {
         if (empty($table)) {
@@ -40,6 +50,12 @@ class DBWrapper
         return $this->dBHandler->getResults($sql, []);
     }
 
+    /**
+     * @param $table
+     * @param $field
+     * @param $value
+     * @return mixed
+     */
     public function findOneBy($table, $field, $value)
     {
         $query = 'SELECT * FROM ' . $table .
@@ -51,6 +67,12 @@ class DBWrapper
         return $this->dBHandler->getRow($query, $params);
     }
 
+    /**
+     * @param $query
+     * @param array $params
+     * @return mixed
+     * @throws Exception
+     */
     public function findQuery($query, array $params = [])
     {
         if (empty($query)) {
@@ -60,6 +82,12 @@ class DBWrapper
         return $this->dBHandler->getResults($query, $params);
     }
 
+    /**
+     * @param $table
+     * @param array $variables
+     * @return mixed
+     * @throws Exception
+     */
     public function persist($table, array $variables)
     {
         if (empty($table) || empty($variables)) {
@@ -84,6 +112,14 @@ class DBWrapper
         return $this->dBHandler->lastId();
     }
 
+    /**
+     * @param $table
+     * @param array $data
+     * @param array $where
+     * @param null $limit
+     * @return bool
+     * @throws Exception
+     */
     public function update($table, array $data, array $where, $limit = null)
     {
         $result = false;
@@ -99,6 +135,9 @@ class DBWrapper
         return $result;
     }
 
+    /**
+     * @return mixed
+     */
     public function lastID()
     {
         return $this->dBHandler->lastId();

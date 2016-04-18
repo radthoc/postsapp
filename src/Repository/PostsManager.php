@@ -1,17 +1,25 @@
 <?php
-include_once __DIR__ .
-    DIRECTORY_SEPARATOR .
-    'DBWrapper.php';
 
+/**
+ * Class PostsManager
+ */
 class PostsManager
 {
-    private $dbWrapper;
+    /**
+     * @var DBWrapper
+     */
+    private $dBWrapper;
 
-    public function __construct()
+    public function __construct(DBWrapper $dBWrapper)
     {
-        $this->dbWrapper = new DBWrapper;
+        $this->dBWrapper = $dBWrapper;
     }
 
+    /**
+     * @param $postId
+     * @return mixed
+     * @throws Exception
+     */
     public function getPostById($postId)
     {
         $query = '
@@ -26,9 +34,13 @@ WHERE p.post_id = ?;';
 
         $params[] = $postId;
 
-        return $this->dbWrapper->findQuery($query, $params);
+        return $this->dBWrapper->findQuery($query, $params);
     }
 
+    /**
+     * @return mixed
+     * @throws Exception
+     */
     public function getPosts()
     {
         $query = '
@@ -46,15 +58,25 @@ JOIN users up ON p.user_id = up.user_id
 LEFT JOIN comments c ON p.post_id = c.post_id
 LEFT JOIN users uc ON c.user_id = uc.user_id;';
 
-        return $this->dbWrapper->findQuery($query);
+        return $this->dBWrapper->findQuery($query);
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     * @throws Exception
+     */
     public function addPost($data)
     {
         $data['user_id'] = 7;
-        return $this->dbWrapper->persist("posts", $data);
+        return $this->dBWrapper->persist("posts", $data);
     }
 
+    /**
+     * @param $commentId
+     * @return mixed
+     * @throws Exception
+     */
     public function getCommentById($commentId)
     {
         $query = '
@@ -69,17 +91,25 @@ WHERE c.comment_id = ?;';
 
         $params[] = $commentId;
 
-        return $this->dbWrapper->findQuery($query, $params);
+        return $this->dBWrapper->findQuery($query, $params);
     }
 
+    /**
+     * @param $data
+     * @return mixed
+     * @throws Exception
+     */
     public function addComment($data)
     {
         $data['user_id'] = 8;
-        return $this->dbWrapper->persist("comments", $data);
+        return $this->dBWrapper->persist("comments", $data);
     }
 
+    /**
+     * @return mixed
+     */
     public function getLastInsertedId()
     {
-        return $this->dbWrapper->lastID();
+        return $this->dBWrapper->lastID();
     }
 }
