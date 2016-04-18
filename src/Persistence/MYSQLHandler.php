@@ -10,7 +10,7 @@ class MYSQLHandler implements DBHandlerInterface
         'host' => '127.0.0.1',
         'usr' => 'root',
         'pwd' => 'lowmorale',
-        'schema' => 'comments_site'
+        'schema' => 'posts_site'
     ];
 
     public function __construct()

@@ -51,7 +51,7 @@ LEFT JOIN users uc ON c.user_id = uc.user_id;';
 
     public function addPost($data)
     {
-        $data['user_id'] = 3;
+        $data['user_id'] = 7;
         return $this->dbWrapper->persist("posts", $data);
     }
 
@@ -74,7 +74,7 @@ WHERE c.comment_id = ?;';
 
     public function addComment($data)
     {
-        $data['user_id'] = 5;
+        $data['user_id'] = 8;
         return $this->dbWrapper->persist("comments", $data);
     }
 

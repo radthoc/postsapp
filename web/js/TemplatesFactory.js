@@ -72,7 +72,7 @@ var templatesFactory = {
     render: function (posts) {
         var post_id = null;
 
-        if (posts) {
+        if (posts.length > 0) {
             for (let post of posts)
             {
                 if (post_id != post.post_id) {
