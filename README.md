@@ -24,3 +24,7 @@ Notes
 - In order to prevent spams we added a redundant field in the forms hidden through css. Normal users will not be able to see the field, but spambots will try to enter a value into it because they do not process CSS or javascript.
 - Since there's no security implemented the user is hardcoded in the creation of posts and comments.
 - This site uses no framework or libraries due to special requirements for the test
+
+TODO
+----
+Refactor the backend to add an api gateway layer, requests handlers and reestructure the repository.
